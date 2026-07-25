@@ -8,7 +8,6 @@ int main() {
         for(int j=1 ; j<=n; j++){
             cout << i << " * " << j << " = " << i*j;
             if(j != n) cout << ", ";
-            else cout << " ";
         }
     cout << endl;
     }
