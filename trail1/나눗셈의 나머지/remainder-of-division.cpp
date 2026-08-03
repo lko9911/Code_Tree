@@ -6,14 +6,9 @@ int main() {
     int count[10]={};
     cin >> a >> b;
 
-    while(1){
-    int result=0;
- 
-    result = a%b;
+    while(a>1){
+    count[a%b]++;
     a/=b;
-    count[result]++;
-    
-    if(a<=1) break;
     }
 
     int sum=0;
