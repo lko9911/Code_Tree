@@ -7,7 +7,7 @@ int main() {
     int flage=0;
     cin >> s >> c;
 
-    for(int i=0; i<s.length(); i++){
+    for(int i=0; i<=s.length()-c.length(); i++){
         if(s.substr(i,c.length())==c){
         flage=1;
         cout << i;
