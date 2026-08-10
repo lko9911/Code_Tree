@@ -2,12 +2,11 @@
 using namespace std;
 
 int result(int a, int b){
-    int n=a;
-    for(int i=0; i<b-1; i++){
-        a *= n;
-
+    int n=1;
+    for(int i=0; i<b; i++){
+        n*=a;
     }
-    return a;
+    return n;
 }
 
 int main() {
