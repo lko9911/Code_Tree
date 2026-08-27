@@ -1,84 +1,79 @@
 #include <iostream>
 #include <vector>
-#include <climits>
 using namespace std;
 
-vector<int> selected;
-
-bool visited[51][51];
-int board[51][51];
-
-vector<pair<int,int>> group_cells;
-
 int n,l,r;
+int egg[50][50];
+int visited[50][50];
 
-int dx[4] = {-1,0,1,0}, dy[4] = {0,1,0,-1};
+int dx[4] = {-1,1,0,0}, dy[4] = {0,0,1,-1};
+
+vector<pair<int,int>> group;
+int sum;
 
 void dfs(int x, int y){
     visited[x][y] = true;
-    group_cells.push_back({x,y});
+    group.push_back({x,y});
+    sum += egg[x][y];
 
-    for(int dir = 0; dir<4; dir++){
+    for(int dir=0; dir < 4; dir++){
         int nx = x + dx[dir];
         int ny = y + dy[dir];
 
-        if(nx < 0 || nx >= n || ny < 0 || ny  >=n) continue;
-
+        if(nx < 0 || nx >=n || ny < 0 || ny >= n) continue;
         if(visited[nx][ny]) continue;
+        int diff = abs(egg[x][y] - egg[nx][ny]);
+        if(diff < l || diff > r) continue;
 
-        if(abs(board[x][y] - board[nx][ny]) >= l && abs(board[x][y] - board[nx][ny]) <= r){
-            dfs(nx,ny);
-        }
+        dfs(nx,ny);
     }
 }
 
 int main() {
-    cin >> n >> l >> r;
+    cin >>  n >> l >> r;
 
     for(int i=0; i<n; i++){
-        for(int j = 0; j<n; j++){
-            cin >> board[i][j];
-        }
+        for(int j=0; j<n; j++)
+        cin >> egg[i][j];
     }
 
-    int cnt=0;
+    int answer = 0;
 
     while(1){
     bool move = false;
 
-    for(int i=0; i<n; i++)
-        for(int j = 0; j<n; j++)
-            visited[i][j] = false;
-        
-    
     for(int i=0; i<n; i++){
-        for(int j = 0; j<n; j++){
-            if(visited[i][j]) continue;
+        for(int j=0; j<n; j++)
+        visited[i][j] = false;
+    }
 
-            group_cells.clear();
-            dfs(i,j);
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){
+        if(visited[i][j]) continue;
+        group.clear();
+        sum = 0;
 
-            if(group_cells.size() >= 2) move = true;
+        dfs(i,j);
 
-            int total = 0;
-            for(auto p : group_cells){
-                int x = p.first;
-                int y = p.second;
-            total += board[x][y];
+        if(group.size() >= 2){
+            move = true;
+
+            int avg = sum / group.size();
+            for(auto cell : group){
+                int x = cell.first;
+                int y = cell.second;
+
+                egg[x][y] = avg;
             }
-
-            for(auto p : group_cells){
-                int x = p.first;
-                int y = p.second;
-                board[x][y] = total/group_cells.size();
-            }
+        }
         }
     }
 
     if(!move) break;
-    cnt++;
+
+    answer++;
     }
-    
-    cout << cnt;
+
+    cout << answer;
     return 0;
 }
