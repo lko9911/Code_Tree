@@ -3,41 +3,42 @@
 #include <climits>
 using namespace std;
 
-vector<int> selected;
-vector<pair<int,int>> person;
-vector<pair<int,int>> hos;
-
 int n,m, answer = INT_MAX;
+vector<pair<int,int>> people;
+vector<pair<int,int>> hos;
+vector<int> selected;
 
 void check(){
     int total = 0;
-    for(int i=0; i<person.size(); i++){
-        int x = person[i].first;
-        int y = person[i].second;
-        int ref = INT_MAX;
+    for(int i=0; i<people.size(); i++){
+        int x = people[i].first;
+        int y = people[i].second;
+        int dis,ref=INT_MAX;
         for(int j=0; j<m; j++){
             int x2 = hos[selected[j]].first;
             int y2 = hos[selected[j]].second;
-            int diff = abs(x - x2) + abs(y - y2);
-            ref = min(diff, ref);
+            dis = abs(x-x2) + abs(y-y2);
+            ref = min(dis,ref);
         }
         total += ref;
     }
-    answer = min(total, answer);
+    answer = min(total,answer);
 }
 
-void dfs(int start, int cnt){
+void dfs(int x){
     if(selected.size() == m){
         check();
         return;
     }
 
-    for(int i = start; i<hos.size(); i++){
+    for(int i=x; i<hos.size(); i++){
         selected.push_back(i);
-        dfs(i+1, cnt+1);
+        dfs(i+1);
         selected.pop_back();
     }
+
 }
+
 
 int main() {
     cin >> n >> m;
@@ -46,16 +47,13 @@ int main() {
         for(int j=0; j<n; j++){
             int value;
             cin >> value;
-            if(value == 1){
-                person.push_back({i,j});
-            } else if(value == 2){
-                hos.push_back({i,j});
-            }
+            if(value == 1) people.push_back({i,j}); 
+            else if(value == 2) hos.push_back({i,j}); 
         }
-    }
+    }  
 
-    dfs(0,0);
-
+    dfs(0);
+    
     cout << answer;
     return 0;
 }
